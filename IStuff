@@ -1,0 +1,568 @@
+https://github.com/yaggarwal/exploration
+
+Webservices
+ - SOAP
+ - REST
+
+ SOAP  --  SOAP UI tool - useful for automating SOAP based services . For REST you can automate easily using JAVA language
+
+  --  communicate in xml language
+  --  request and response are sent in xml format
+  --  WSDL  - document that is to be (must be) shared with others what API is capable of doing - it is xml file. It contains all functions that API can execute like ADD, subtract etc. It is hard to understand wsdl rules. Automation tools make that easy. they understand the wsdl rules easily.
+
+   -- Drawbacks -  xml lengthy task, WSDL file . code becomes length. you have to write as per WSDL rules.
+
+   Security is very good
+
+
+
+  REST --- flexible, easy to use, stateless, cacheless..
+
+  --  REST on top of SOAP is in demand these days
+  -- implemented in both json and xml. json is light.
+  -- conversion of json to java is easy
+  --  REST has only 4 methods -  CRUD  while in SOAP there are methods defined like ADD, Subtract, divide etc and we have to call them
+
+  create - POST
+  read - GET
+  update - PUT
+  delete - DELETE
+  patch  - PATCH  -- to update only certain fields . DO not send the entire parameters
+
+  --  We communicate using only these 4 requests.
+  -- no WSDL - Developers have to create the document like api name, api description, api version, api method, api request, api response
+
+
+  -- Need to know different REST URL's , input params they take and test them like by seller name, by seller email, seller id etc
+  -- in GET request we append the parameyers like  /url/?id-1819
+
+  -- RestAssured 
+
+   jars required
+   -- testng
+    -- restassured
+    --json-path  (jayway one)
+     -- json scheme validator (jayway one)
+
+
+API Key:  5c593655629288ef8ce003f08dcdd385
+
+ ---- git jason server 
+      --- Install Node JS for this
+
+Examples can be viewed at:
+
+    http://testdetective.com/rest-assured-framework-overview/
+    http://testdetective.com/building-rest-testing-framework/
+    Frameword exaample: http://testdetective.com/rest-assured-going-deeper/
+
+       -- Test class -  that simply calls the method to test assertions
+                     - define entities class: User (domain objects)
+                     - define service clients - (UserService)
+                     - Define factory class - (UserFactory -  to create new user...)
+
+       https://blog.philipphauer.de/testing-restful-services-java-best-practices/
+
+
+
+
+Testing
+=========
+
+
+   Cost
+    -- go for open source based tools like java, selenium etc
+    -- automation -  saves time, every build, frequently test with every change (continous integration)
+
+    -- smoke testing  -  1st level of testing done initially like sanity. You can develop automation scripts and check that all api are working giving status code of 200. Then only it is beneficial for the testing team. This avoids time.
+
+
+
+-- The author believes that goal of the smart tester is to understand the
+functionality, input/output domain, and the environment of use for the
+code being tested. For certain types of testing, the tester must also understand
+in detail how the code is constructed.
+
+
+
+Security Testing
+================
+
+http://it-ebooks.directory/book-0470170778.html
+
+def -  confdential data remains confidential -  users can do only what they are authorised to perform
+security is journey not a destination
+
+-- OWASP - declared 10 dangerous web vulaeability
+
+-- HTTP -- conection less, stateless (maintained using cookies )
+        --- not secure. man in the middle attack can access information. because it is not secured . man in middle attack may the network service provider. Proxy tools like fiddler
+
+-- HTTPS --  Conbination of HTTP + SSL  . It encrypt infomation before sending to the secure
+
+ -- GET  and POST methods for retreiving and sending data from server
+
+ -- Fiddler is a tool for proxy used for web debugging/hacking
+
+
+ XSS -  Cross site scripting
+ ----------------------------
+ It allows attackers to run his own client side scripting especially javascript into web pages viewed by other users.
+   -- where the attacker can run his scripts. inject html code into the sites
+     1. url post string  example: www.google.com?q=web+application -  replace paameter value with the malicious code - directly hitting urls , also for POST requests
+     2. form submission
+     3. TextAreas
+
+     -- Do not allow special characters, HTML code in the input boxes.
+     -- Also check that same code should also not be specified in the url parameters
+     -- For this filters should be applied on front end  and as well as the code level i.e server side handling should be done
+     -- it is safe if those html characters are displayed as it is entered. It should not get executed. It is safe if html characters are converted in to html html encoding like &lt;. &gt; etc . 
+     -- View the source code and check that your input should not have html tags as it was entered
+
+     Types of XSS
+      1. Reflective XSS -  it is for that specific request only. one you close the browser it is gone.
+      2. Persistent XSS - It is saved permanenty and is visible to others viewing the website. Injecting code while posting comments in the form is an example
+
+    Example:  http://www.enhanceie.com/test/xss/
+
+     www.learnsocial.com
+
+
+  Cookies
+  -------------
+  HTTP is a stateless communication. Cookies maintain state for previous and new requests.
+  -- cookies can not be read, if they are properly secured even if you apply client side scripting
+  -- For Any cookie... 5 attributes are defined:   secure attribute, HttpOnly atribute, Domain attribute, Expire attribute and Path Attribute
+
+  For session cookie (in case of banking examples) - this should exire as soon as the browser it is closed. Otherwise report.
+
+  -- with HTTP request not secure , there is a chance of session hijacking
+
+  Secure attribute :
+  -- Important cookies like login issues should not be sent with http request. They should only be sent with https. For this mark the cookie 'secure attribute to true.'
+  
+  HttpOnly Attribute:
+  -- Using XSS attacker can execute scripts on the client browser and steal the cookies.
+  -- set the HttpOnly attribute to avoid reading the cookies by XSS . When this flag is set cookies will only be read when there is any http request.
+
+  Ask developers the questions why particular atributes are not set ?
+
+  Domain Attribute: for which specific domain this cookie should be set and sent over to server
+
+  Path Attribute -  for which pages this should cookies should be sent from browser to server. Not for all pages cookies should be sent.  / denotes that cookie will be sent for all pages of domain.
+
+  Expire -  expiry should not be too long for confidential cookies
+         -  Settting Expiry value to session means that cookie will expire once browser is close. Like in case in online banking.
+
+
+
+SQL Injection
+---------------
+-- urls where parameters are passes in url like this abc.com/?id=89  are exposed to  SQL injection
+-- SQL can be passed as the parameter value
+--- Never show any exception stack trace ti user (like SQL or any other exception). It should be gracefuly handled.
+
+
+-- Enter some invalid parameter value in the url. Example append any colon , comma etc like 64' . If any SQL exception is shown it means site is under sql injection secutity threat.
+    example:   http://www.bransonparksandrecreation.com/page.php?id=60' 
+               http://www.bransonparksandrecreation.com/page.php?id=60 order by 2  - this should not get executed. Valid error message should be shown in this case.
+
+-- abc.com ? userid=rahul or 1=1 (appending 'or 1=1' .this will return all the user ids present in the database since 1=1)
+
+
+Session Hijacking and CSRF - cross site request  forgery
+----------------------------------------------------------
+
+how to avoid CSRF :     open fiddler and check all requests going when you perform any operration
+ --  usinh cryptographc tokens -  specify tokens in the hidden field
+ - public private key cryptography
+
+ Steps to test
+ ------------
+  --  send confidential data as a part of POST requests
+  --  check whether hidden/tokens field is set for data submissions
+  --  change the token value in the cookie and check it should not accept the request
+  -- open the site in another system. Get the token id of that session and use it in the current session to submit the request - it should not accept.
+  -- Use same value for both the tokens (hidden field and cookie) and submit - it should not accept
+
+
+
+Parameter Tampering to steal sensitive data
+============================================
+ Parameter tampering can be done with:
+   -- Cookies e.g: ROLE=USER after login... attacker can change ROLE=ADMIN   -- do server side validations
+   -- Form Fields
+   -- URL query string  e.g;  Change Account numbers in the url.. banking.com/account=123456/details, banking.com/username=rahul/details ...change username
+   -- HTTP Headers
+
+  -- Importance of server side validations in web applications :   
+     - send the request from the fiddler tool instead of the browser. There is no validation here.
+     - As a QA... check that all client side validations are implemented on server side. Try sending the requests using the fiddler proxy tool.
+
+
+Account Security
+=================
+password security is drivern by two factros:
+  1. strngth of password   -- check at passwordmeter.com
+  2. Uniqueness of password
+
+Source of attacking passwords:
+  1. Main in the middle attack - https connection is used
+  2. Password retrieved as a cookie with XSS  -- have http flag set ..and also stop sending password as a cookie
+  3. Account brute forced via HTTP GET -  -  CSRF can occur. Pass all confidenial information as POST requests
+  4. Admin facility compromised   -- even admin should also no have access to your passwords. He should have ability to regenerate/reset your passwords temporarliy. or can generate reset links.
+  5. SQL injection risk exploited
+
+  Best practices to be followed in securing account details:
+    1. Emailing Account credentials on account creation -  don't send credentials in emails
+    2. Forgot password message diplay methods - - don't diplsay messages like that this email does  not exists in the system. Simply send an email that reset instructions has been sent on email whether you are enrolled or not
+    3. password reset mail consequences -- old password should work till the time new one is reset. Account should not get locked.
+    4. password storage pattern -- encryoting  or any other encoding format
+    5. remember me password -- in this there is 90% chance that password will going as a cookie. in this case password cookie should has http flag true.
+    6. reauthenticate few imp features -  ask for old password if you change password, or if you update any other crucial information then ask for the password
+    7. brute force attack handling mechanism -  try all possible combination of password . After 3 o 4 attempts you should lock the attempt.
+
+
+
+Defense mechanisms for security
+===============================
+■ Handling user access to the application’s data and functionality, to prevent users from gaining unauthorized access.
+   - authentication - username and password. most basic authentication
+   - session management
+   - Acess control
+■■ Handling user input to the application’s functions, to prevent malformed input from causing undesirable behavior.
+■■ Handling attackers, to ensure that the application behaves appropriately when being directly targeted, taking suitable defensive and offensive measures to frustrate the attacker.
+■■ Managing the application itself, by enabling administrators to monitor its activities and configure its functionality.
+
+
+     Appium
+     ======
+     API LEvel - API Level - (10-18)  - selendroid
+     API level > 18 - appium
+
+     Appium is build on top of appium
+
+
+     Install APK on Mobile
+     ----------------------
+     Ex: install opera browser
+
+     1. Connect mobile to laptop
+     2. type adb devices
+     3. type adb install <path where apk is located
+
+google apk extension -- in chrome
+
+
+
+
+Automation
+----------
+
+1. Types of automation frameworks:
+  
+- Module Based Testing Framework
+- Library Architecture Testing Framework
+- Data Driven Testing Framework
+- Keyword Driven Testing Framework
+- Hybrid Testing Framework
+- Behavior Driven Development Framework
+
+Compoenents of test automation framework:
+--------------------------------------
+1. Test script design pattern - these should only be used for assertions
+2. Common usable library
+3. Keywords/business logic library
+4. test data separate
+5. configuration file for browser, urls, environment etc
+6. logging -for debugginh
+7. reports -may be email if required, screenshots etc
+8. files for locators -  have seprate localtor files related to build version. You can have one base file containing locators which do not change . And one build spefic file where you can over ride the locator values and add new here .
+9. dashboard - for viewring statistics
+10. integrate it with build - to test it with every change - jenkins integration
+
+11. what is the executionc criteria ? can non technical member execute these test scripts ?
+
+12. Ability to group test cases into different groups , may be based on module, priority so that they can be executed as per needs.
+13. Parallel test execution for speed up and on different browsers.
+13. have Seprate package for data providers
+
+
+test
+ |_framework
+      |_selenium
+          |_browser (web app)
+
+  Framework itself is divided into layers:
+  
+  workflows
+    |_ pages
+        |_  navigation | UI Utilities        
+
+
+Go through below links for automation:
+
+https://confengine.com/selenium-conf-2016/proposal/2437/test-data-food-for-your-test-automation-framework
+http://testdetective.com/building-rest-testing-framework/
+https://confengine.com/selenium-conf-2015/proposal/1365/docker-selenium-getting-started
+
+jobs:
+http://www.goibs.com/Company/Quality-Assurance-Automation-Engineer-95C10.html
+http://find.fcagroupcareers.com/s/Job-Details/Connected-Services-Qualification-Automation-Development-Engineer-Job/Auburn-Hills-MI/xjdp-cl289866-jf410-ct100244-jid67507461-coUS
+
+
+Test Metrics
+How you motivate team members
+
+
+
+
+Docker
+=====
+https://www.udemy.com/docker-for-developers/
+
+- is software containerization platform. It provides abstarctions of OS level virtualization.
+-- Everything in docker world is cotainers.
+
+At high level : these containers the real:
+   - OS
+   - Software you build
+   - Dependencies to run software
+   - environement variables
+   - And you name it.
+
+-- concept of hypervisors is eliminated in dockers which exists in case of VM. 
+-- Concept of containers is achieved through use of LXCs (Linux Containers)
+-- eliminiates problem -  Runs in your machine but not mine.  That is why Dockers call themselves as BUILD ---> SHIP ---> RUN
+
+You can access containers at hub.docker.com ot kitematic
+
+
+Docker is available for:
+ - Windows 10 -  64 bit -  Docker for windows  --- avaibale as a installer  -  what is does is run container in a linux VM using Hypervisor. It uses linux for the container behind the scenes.
+ - Windows (Beta) -  capable of running containers both on windows and linux. It supports both windows based containers and linux based containers. You have the option to swicth to windows and linux containers. Run the docker version command and it will show both the client and server versions used i.e windows or linux
+
+ - MAC: 
+ - Widows server 2016
+ - Linux
+
+
+
+
+testNG
+======
+
+Annotations
+-----------
+ @Test
+ @BeforeMethod - called before each test method --  opening the browser before each test case
+ @AfterMethod - called after test method - closed after each test case
+ @BeforeClass - executed once before the test class -  it can be used to intialize the selenium webdriver
+ @AfterClass - executed after all tests in a class is executed -  destroy selenium
+ @BeforeTest - this is called once before start executing the tests method
+ @AfterTest -  this is called once before start executing the tests method
+ @BeforeSuite - Called as soon as testsuite starts - called initially at the start
+ @AfterSuite
+
+ Below is the hierarchy:
+
+ @BeforeSuite
+      @BeforeTest
+            @BeforeClass
+                @BeforeMethod
+                   @Test
+                @AfterMEthod
+            @AfterClass
+      @AfterTest
+  @AfterSuite
+
+Running tests in a batch -  use the testng.xml as a batch file for this
+------------------------
+Verbose can have value between 0 and 10  example in testng.xml - <test verbose="2" name='Functional Tests'>
+
+How to run multiple batch files
+-------------------------------
+- Create different suite file for differt modules like search page, product page etc
+- create a master suite file and include the different batch files in the master suite
+  e.g:  <suite name='Functional test suite>
+            <suite-files>
+                <suite-file path="suiteA.xml" />
+                <suite-file path="SuiteB.xml" />
+            <suite-files>
+         </suite>
+
+  Skipping  a test -  throw new SkipException("this functionality is not supported") - add this in  the test method
+  ----------------
+
+  Priortization and dependsonmethods - 
+  ----------------------------------
+  @Test(priority=1)
+  @Test(priority=2)
+  @Test(priority=3)
+
+  here priority will execute 1 before 2, and 2 will execute 3 . Test having same priority will have no order. It depends upon testng
+
+  You can also use dependsOnMethods for dependency. In this case if test on wich another test is dependent gets failed.. then other tests will not execute. Other tests will get skipped.
+  @Test(dependsOnMethods={"login"})
+   @Test(dependsOnMethods={"login", "navigating"})
+
+   -> dependsOnMethods has priority over the priority attribute if both attributes are present.
+
+   Parameterization
+   -----------------
+  1.  defined using testng.xml file  - -  this should not be used. You should use dataproviders
+   <parameter name="email" value="appautomator@gmail.com" />
+
+   @parameters("email")
+   @Test
+   public void login(String email) {}
+
+   2. Using data providers :  @Test(dataProviderClass=TestProvider.class, dataProvider="data") ... have seprate package/class for data providers
+      Advance:  You can also pass Method as a parameter to dataprovider method. This is helpful when multiple test requir/share data.
+      Example:  
+      @DataProvider(name="data")
+      public static object[][] testData(Method m) () {
+        if (m.getName().equals("login")) {} else if (if (m.getName().equals("registration")))
+
+      }
+
+  Grouping --   
+  --------
+
+  Listners: 9 listners -- https://examples.javacodegeeks.com/enterprise-java/testng/testng-listeners-example/
+  ---------------------
+
+IExecutionListener - used for findih the start and end time of all testng suites. You can notify of execution at start and once it finishes.
+IAnnotationTransformer - can be used to modfy @Test Annotation only.   IAnnotationTransformer2  is used for other annotations like @Factory, @DataProvider
+ISuiteListener
+ITestListener
+IConfigurationListener
+IMethodInterceptor
+IInvokedMethodListener
+IHookable
+IReporter
+
+Retry a failed test case:   http://toolsqa.com/selenium-webdriver/retry-failed-tests-testng/
+
+
+
+
+DataDriven framework using Selenium
+===================================
+http://www.techbeamers.com/writing-data-driven-tests-using-webdriver/
+
+
+
+  Spark
+  -====
+
+  Shortcomings of RDD:
+
+      - slow  because they require java serialisation . take data from disk, deserialise it for computation and serialise it back. You can speed up using kyroserialisatio but that is only half way.
+        This can be improved by using dataframes --- but they sacrifice type safety
+        At last we have DataSets - has advantages of both RDDs and Dataframes [it has benefits of RDD i.e type safety and also of Dataframes for optimising queries faster]
+
+
+  - Spark structuted streaming is based on Spark Datasets
+
+
+
+
+  Elastic Search:
+  ==============
+  http://self-learning-java-tutorial.blogspot.in/2015/09/elasticsearch-tutorial.html
+
+
+
+kafka - logstash  --operations
+------------------------------
+https://www.elastic.co/blog/just-enough-kafka-for-the-elastic-stack-part1
+https://www.elastic.co/blog/just-enough-kafka-for-the-elastic-stack-part2
+
+
+
+
+Testing Questions
+------------------
+
+  
+No Offer
+Negative Experience
+Average Interview
+Application
+I applied through a recruiter. The process took 1 day. I interviewed at 1E (London, England (UK)) in February 2012.
+
+Interview
+Interview Process:
+1) Online Test to be done at home. Contains basic testing questions to test your knowledge on software testing.
+2) Telephonic interview for 25 min. Questions around Agile and Software testing
+3) 1:1 lasted for about 2 hrs. Questions again on agile and software testing, Behavioral questions,
+
+1) What is the difference between W model and V model?
+2) If you had to choose between the two, which one would you choose?
+3) What is the difference between W-model and Agile?
+4) What is the difference between severity and priority?
+5) What is usability testing?
+4) Describe your agile project?
+5) How is regression testing done?Eg: If you have 3 iterations: 1 feature and 1 fix to be delivered in 3 iterations how would you rgression test. Your testing effort is worth 12 weeks.
+6) You come across a bug and the developer refuses to fix it. How will your handle this situation?
+7) If an offshore team co-ordinating with business onshore has clarified something which required the requirements to be changed slightly which you were not aware of. How will you handle this situation?
+8) Draw the architecture of your current project?
+9) Situational: How important is the software Testing processes. Imagine a developer refuses to fix a defect. How will you handle?
+what is exploratory testing  
+
+test a toster
+
+Sample test case scenarios:
+===========================
+https://onecore.net/archives
+
+
+Scroll code in selenium
+========================
+JavascriptExecutor jsx = (JavascriptExecutor)driver;
+ 
+ jsx.executeScript("window.scrollBy(0,4500)", ""); //scroll down
+ 
+ Thread.sleep(3000);
+ 
+ jsx.executeScript("window.scrollBy(450,0)", ""); //scroll up
+
+
+ Broken image in webpage
+ ======================
+ WebElement ImageFile = driver.findElement(By.xpath("//img[contains(@id,'Test Image')]"));
+ Boolean ImagePresent = (Boolean) ((JavascriptExecutor)driver).executeScript("return arguments[0].complete && typeof arguments[0].naturalWidth != \"undefined\" && arguments[0].naturalWidth > 0", ImageFile);
+
+@Test
+public void CheckImage() throws Exception {
+  driver.get(baseUrl);
+  WebElement ImageFile = driver.findElement(By.xpath("//img[contains(@id,'Test Image')]"));
+        
+        Boolean ImagePresent = (Boolean) ((JavascriptExecutor)driver).executeScript("return arguments[0].complete && typeof arguments[0].naturalWidth != \"undefined\" && arguments[0].naturalWidth > 0", ImageFile);
+        if (!ImagePresent)
+        {
+             System.out.println("Image not displayed.");
+        }
+        else
+        {
+            System.out.println("Image displayed.");
+        }
+  }
+
+
+
+Rest auth
+Java performance
+This DOC
+How to automate and test REST API
+
+
+Puzzles to study
+===============
+http://gpuzzles.com/brain-questions/logic-puzzles-and-riddles/?source=tags&eopost=1
+
+
+Design Patterns
+==============
+http://www.newthinktank.com/2012/08/design-patterns-video-tutorial/
