@@ -13,7 +13,8 @@ Gotchas
 We can do this in O(1)O(1) space.
 
 We can do this in less than O(n^2)O(n
- time, while keeping O(1)O(1) space.
+​2
+​​ ) time, while keeping O(1)O(1) space.
 
 We can do this in O(n\lg{n})O(nlgn) time and O(1)O(1) space.
 
@@ -61,14 +62,14 @@ We can "brute force" this by taking each number in the range 1..n1..n and, for e
 }
 
 This is O(1)O(1) space and O(n^2)O(n
-2
- time.
+​2
+​​ ) time.
 
 That space complexity can't be beat, but the time cost seems a bit high. Can we do better?
 
 One way to beat O(n^2)O(n
-2
- ) time is to get O(n\lg{n})O(nlgn) time. Sorting takes O(n\lg{n})O(nlgn) time. And if we sorted the array, any duplicates would be right next to each-other!
+​2
+​​ ) time is to get O(n\lg{n})O(nlgn) time. Sorting takes O(n\lg{n})O(nlgn) time. And if we sorted the array, any duplicates would be right next to each-other!
 
 But if we start off by sorting our array we'll need to take O(n)O(n) space to store the sorted array...
 
@@ -96,66 +97,67 @@ What if we could cut the problem in half a different way, other than cutting the
 With this problem, we're looking for a needle (a repeated number) in a haystack (array). What if instead of cutting the haystack in half, we cut the set of possibilities for the needle in half?
 
 The full range of possibilites for our needle is 1..n1..n. How could we test whether the actual needle is in the first half of that range (1..\frac{n}{2}1..
-2
-n
- ) or the second half (\frac{n}{2}+1..n
-2
-
-n
-+1..n)?
+​2
+​
+​n
+​​ ) or the second half (\frac{n}{2}+1..n
+​2
+​
+​n
+​​ +1..n)?
 
 A quick note about how we're defining our ranges: when we take \frac{n}{2}
-2
-
-n
- we're doing integer division, so we throw away the remainder. To see what's going on, we should look at what happens when nn is even and when nn is odd:
+​2
+​
+​n
+​​  we're doing integer division, so we throw away the remainder. To see what's going on, we should look at what happens when nn is even and when nn is odd:
 
 If nn is 66 (an even number), we have \frac{n}{2}=3
-2
-
-n
- =3 and \frac{n}{2}+1=4
-2
-
-n
- +1=4, so our ranges are 1..31..3 and 4..64..6.
+​2
+​
+​n
+​​ =3 and \frac{n}{2}+1=4
+​2
+​
+​n
+​​ +1=4, so our ranges are 1..31..3 and 4..64..6.
 If nn is 55 (an odd number), \frac{n}{2}=2
-2
-
-n
- =2 (we throw out the remainder) and \frac{n}{2}+1=3
-2
-
-n
- +1=3, so our ranges are 1..21..2 and 3..53..5.
+​2
+​
+​n
+​​ =2 (we throw out the remainder) and \frac{n}{2}+1=3
+​2
+​
+​n
+​​ +1=3, so our ranges are 1..21..2 and 3..53..5.
 So we can notice a few properties about our ranges:
 
 They aren't necessarily the same size.
 They don't overlap.
 Taken together, they represent the original input array's range of 1..n1..n. In math terminology, we could say their union is 1..n1..n.
 So, how do we know if the needle is in 1..\frac{n}{2}1..
-2
-
-n
- or \frac{n}{2}+1..n
-2
-
-n
- +1..n?
+​2
+​
+​n
+​​  or \frac{n}{2}+1..n
+​2
+​
+​n
+​​ +1..n?
 
 Think about the original problem statement. We know that we have at least one repeat because there are n+1n+1 items and they are all in the range 1..n1..n, which contains only nn distinct integers.
 
 This notion of "we have more items than we have possibilities, so we must have at least one repeat" is pretty powerful. It's sometimes called the pigeonhole principle ↴ . Can we exploit the pigeonhole principle to see which half of our range contains a repeat?
 
 Imagine that we separated the input array into two subarrays—one containing the items in the range 1..\frac{n}{2}1..
-2
-
-n
-  and the other containing the items in the range \frac{n}{2}+1..n
-2
-
-n
- +1..n.
+​2
+​
+​n
+​​  and the other containing the items in the range \frac{n}{2}+1..n
+​2
+​
+​n
+​​ +1..n.
 
 Each subarray has a number of elements as well as a number of possible distinct integers (that is, the length of the range of possible integers it holds).
 
@@ -181,21 +183,21 @@ Solution
 Our approach is similar to a binary search, except we divide the range of possible answers in half at each step, rather than dividing the array in half.
 
 Find the number of integers in our input array which lie within the range 1..\frac{n}{2}1..
-
-
-n
- .
+​2
+​
+​n
+​​ .
 Compare that to the number of possible unique integers in the same range.
 If the number of actual integers is greater than the number of possible integers, we know there’s a duplicate in the range 1..\frac{n}{2}1..
-2
-
-n
- , so we iteratively use the same approach on that range.
+​2
+​
+​n
+​​ , so we iteratively use the same approach on that range.
 If the number of actual integers is not greater than the number of possible integers, we know there must be duplicate in the range \frac{n}{2} + 1..n
-2
-
-n
- +1..n, so we iteratively use the same approach on that range.
+​2
+​
+​n
+​​ +1..n, so we iteratively use the same approach on that range.
 At some point our range will contain just 1 integer, which will be our answer.
   public int findRepeat(int[] theArray) {
 
