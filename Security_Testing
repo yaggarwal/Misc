@@ -48,3 +48,35 @@ There are several ways to approach the testing and measurement of code coverage:
 manipulating the same data.
 
 Use ZAP tool spider to discover all urls.
+
+
+FingerPrint Web Application Framework -  Know which framework has been used
+===========================================================================
+Look in to these:
+
+• HTTP headers
+• Cookies
+• HTML source code - comments,  script variable names 
+• Specific files and folders - very framework has different set of files and folders
+
+Example:  X-Powered-By: Mono n response - we understand that the web ap- plication framework is likely to be Mono
+
+X-Generator header
+
+online toos:  https://www.morningstarsecurity.com/research/whatweb
+
+Never expose this information. Modify custom headers, and cookie names so that framework name can nit be reveled to the attacker. 
+
+General guidelines:
+• Make sure there are no visual markers disclosing the framework
+• Remove any unnecessary comments (copyrights, bug information, specific framework comments)
+• Remove META and generator tags
+• Use the companies own css or js files and do not store those in a framework-specific folders
+• Do not use default scripts on the page or obfuscate them if they must be used.
+
+For file and folders:
+
+• Remove any unnecessary or unused files on the server. This implies text files disclosing information about versions and installation too.
+• Restrict access to other files in order to achieve 404-response when accessing them from outside. 
+This can be done, for example, by modifying htaccess file and adding RewriteCond or RewriteRule there.
+An example of such restriction for two common WordPress folders is presented below.
