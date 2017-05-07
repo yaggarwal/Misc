@@ -50,8 +50,8 @@ manipulating the same data.
 Use ZAP tool spider to discover all urls.
 
 
-FingerPrint Web Application Framework -  Know which framework has been used
-===========================================================================
+FingerPrint Web Application Framework -  Know which framework and verison hhas been used
+========================================================================================
 Look in to these:
 
 • HTTP headers
@@ -80,3 +80,5 @@ For file and folders:
 • Restrict access to other files in order to achieve 404-response when accessing them from outside. 
 This can be done, for example, by modifying htaccess file and adding RewriteCond or RewriteRule there.
 An example of such restriction for two common WordPress folders is presented below.
+
+
